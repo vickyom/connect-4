@@ -33,6 +33,9 @@ class App extends React.Component {
   }
   handleOpenModal() {
     this.setState({ showModal: true });
+    this.initBoard();
+    sessionStorage.setItem("Player_1", 0);
+    sessionStorage.setItem("Player_2", 0);
   }
   handleChange(event) {
     const value = event.target.value;
@@ -152,12 +155,16 @@ class App extends React.Component {
       parseInt(sessionStorage.getItem("Player_2"))
     ) {
       checkWinner = "Player 1 Winner of the Tournament";
+      sessionStorage.setItem("Player_1", 0);
+      sessionStorage.setItem("Player_2", 0);
       this.initBoard();
     } else if (
       parseInt(sessionStorage.getItem("Player_1")) <
       parseInt(sessionStorage.getItem("Player_2"))
     ) {
       checkWinner = "Player 2 Winner of the Tournament";
+      sessionStorage.setItem("Player_1", 0);
+      sessionStorage.setItem("Player_2", 0);
       this.initBoard();
     } else {
       checkWinner = "Game is draw";
