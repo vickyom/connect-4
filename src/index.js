@@ -60,7 +60,6 @@ class App extends React.Component {
       board.push(row);
     }
     let cp = this.checkCurrentPlayer();
-    console.log("CP = >", cp);
     this.setState({
       board,
       currentPlayer: cp,
@@ -103,6 +102,7 @@ class App extends React.Component {
       for (let r = 5; r >= 0; r--) {
         if (!board[r][c]) {
           board[r][c] = this.state.currentPlayer;
+          console.log("Play =", board[r][c]);
           break;
         }
       }
@@ -133,13 +133,38 @@ class App extends React.Component {
       } else {
         this.setState({ board, currentPlayer: this.togglePlayer() });
       }
+      if (
+        Math.round(this.state.noOfGames / 2) ===
+        parseInt(sessionStorage.getItem("Player_1")) +
+          parseInt(sessionStorage.getItem("Player_2"))
+      ) {
+        this.checkWinner();
+      }
     } else {
       this.setState({ message: "Game over. Please start a new game." });
       this.initBoard();
     }
-    console.log("State == >", this.state);
   }
-
+  checkWinner() {
+    let checkWinner = "";
+    if (
+      parseInt(sessionStorage.getItem("Player_1")) >
+      parseInt(sessionStorage.getItem("Player_2"))
+    ) {
+      checkWinner = "Player 1 Winner of the Tournament";
+      this.initBoard();
+    } else if (
+      parseInt(sessionStorage.getItem("Player_1")) <
+      parseInt(sessionStorage.getItem("Player_2"))
+    ) {
+      checkWinner = "Player 2 Winner of the Tournament";
+      this.initBoard();
+    } else {
+      checkWinner = "Game is draw";
+      this.initBoard();
+    }
+    this.setState({ message: checkWinner });
+  }
   checkAll(board) {
     return (
       checkVertical(board) ||
@@ -168,7 +193,9 @@ class App extends React.Component {
           </table>
         </div>
         <div className="gameStates">
-          <span className="pl-head">{this.state.noOfGames} Tournament</span>
+          <span className="pl-head">
+            {this.state.noOfGames} Games Tournament
+          </span>
           <span className="pl-text">{this.state.message}</span>
           <div className="pl-layout">
             <div className="pl-details">
@@ -241,10 +268,10 @@ class App extends React.Component {
               onChange={this.handleChange}
             >
               <option value="">No of Games</option>
-              <option value="2games">2 Games</option>
-              <option value="3games">3 Games</option>
-              <option value="5games">5 Games</option>
-              <option value="10games">10 Games</option>
+              <option value="2">2 Games</option>
+              <option value="3">3 Games</option>
+              <option value="5">5 Games</option>
+              <option value="10">10 Games</option>
             </select>
           </div>
           <div className="form-control">
